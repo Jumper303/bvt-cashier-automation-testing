@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="AcceptanceSuite" duration-ms="3658" started-at="2015-08-08T20:49:40Z" finished-at="2015-08-08T20:49:44Z">
+    <groups>
+    </groups>
+    <test name="DepositTest-Windows7-Firefox" duration-ms="3658" started-at="2015-08-08T20:49:40Z" finished-at="2015-08-08T20:49:44Z">
+      <class name="com.bvt.cashier.test.acceptance.deposit.DepositTest">
+        <test-method status="PASS" signature="setUp(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)[pri:0, instance:com.bvt.cashier.test.acceptance.deposit.DepositTest@48140564]" name="setUp" is-config="true" duration-ms="2346" started-at="2015-08-08T22:49:40Z" finished-at="2015-08-08T22:49:42Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[http://127.0.0.1:4444/wd/hub]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[Firefox]]>
+              </value>
+            </param>
+            <param index="3">
+              <value>
+                <![CDATA[Windows7]]>
+              </value>
+            </param>
+            <param index="4">
+              <value>
+                <![CDATA[]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setUp -->
+        <test-method status="PASS" signature="shouldOpenPage()[pri:0, instance:com.bvt.cashier.test.acceptance.deposit.DepositTest@48140564]" name="shouldOpenPage" duration-ms="1133" started-at="2015-08-08T22:49:42Z" finished-at="2015-08-08T22:49:44Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- shouldOpenPage -->
+        <test-method status="PASS" signature="tearDown()[pri:0, instance:com.bvt.cashier.test.acceptance.deposit.DepositTest@48140564]" name="tearDown" is-config="true" duration-ms="167" started-at="2015-08-08T22:49:44Z" finished-at="2015-08-08T22:49:44Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- tearDown -->
+      </class> <!-- com.bvt.cashier.test.acceptance.deposit.DepositTest -->
+    </test> <!-- DepositTest-Windows7-Firefox -->
+  </suite> <!-- AcceptanceSuite -->
+</testng-results>

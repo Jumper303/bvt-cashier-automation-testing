@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="AcceptanceSuite" >
+	
+	<parameter name="hubUrl" value="http://127.0.0.1:4444/wd/hub" /> 
+
+	<!-- IMPORTANT NOTE: Always use 32 bit version of selenium ie driver, even on 64 bit OS!!! -->
+	<!-- IMPORTANT NOTE: Windows Update KB3025390 for IE 11 breaks WebDriver!!! -->	
+	
+	
+	<test name="DepositTest-Windows7-Firefox">
+		<parameter name="browser" value="Firefox" />
+		<parameter name="os" value="Windows7" />
+		<parameter name="version" value="" />		
+		<parameter name="driverLocation" value="" />	
+					
+		<classes>
+			<class name="com.bvt.cashier.test.acceptance.deposit.DepositTest" />
+		</classes>
+	</test>	
+
+</suite>
