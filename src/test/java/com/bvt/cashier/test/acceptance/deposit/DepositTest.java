@@ -13,6 +13,7 @@ import org.testng.annotations.Test;
 
 import com.bvt.cashier.test.acceptance.common.TestFixture;
 import com.bvt.cashier.test.acceptance.pages.CreditCardDepositPage;
+import com.bvt.cashier.test.acceptance.pages.SecureAuthenticationPage;
 
 public class DepositTest extends TestFixture {
 	final static Logger logger = Logger.getLogger(DepositTest.class);
@@ -28,6 +29,7 @@ public class DepositTest extends TestFixture {
 				put("expiryMonth", "01");
 				put("csc", "123");
 				put("amount", "1");
+				put("useExistingCard", "false");
 			}
 		};
 
@@ -38,13 +40,50 @@ public class DepositTest extends TestFixture {
 		}
 
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
-
 		creditCardDepositPage.navigateToPage(siteUrl);
 		creditCardDepositPage.populatePageWithData(paymentData);
-		creditCardDepositPage.submit("Successful Transaction");
-
-		Assert.assertEquals(creditCardDepositPage.messageHeaderLabel.getText(), "Successful Transaction",
+		creditCardDepositPage.submit();
+		creditCardDepositPage.waitFortransationToBeCompleted();
+	
+		Assert.assertEquals(creditCardDepositPage.getTransactionResult(), "Successful Transaction",
 				"Test should return: Successful Transaction, Actual result:"
-						+ creditCardDepositPage.messageHeaderLabel.getText());
+						+ creditCardDepositPage.getTransactionResult());
+	}
+	
+	@Test(enabled = true, testName = "Test:shouldReturnSuccessfulTransactionOnDepositWith3DSPayment")
+	@Parameters({ "siteUrl" })
+	public void shouldReturnSuccessfulTransactionOnDepositWith3DSPayment(String siteUrl) {
+		
+		Map<String, String> paymentData = new HashMap<String, String>() {
+			{
+				put("cardNumber", "xxxx-xxxx-xxxx-1111");
+				put("nameOnCard", "Peter Dobrosi");
+				put("expiryYear", "2016");
+				put("expiryMonth", "01");
+				put("csc", "123");
+				put("amount", "7");
+				put("useExistingCard", "true");
+				put("authenticationStatus", "Y");
+			}
+		};
+
+		if (logger.isDebugEnabled()) {
+			logger.info(
+					"Starting test case: shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment with input data: "
+							+ paymentData.toString());
+		}
+
+		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
+		creditCardDepositPage.navigateToPage(siteUrl);
+		creditCardDepositPage.populatePageWithData(paymentData);
+		creditCardDepositPage.submit();
+		
+		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);		
+		secureAuthenticationPage.authenticateWith(paymentData.get("authenticationStatus"));
+		
+		
+		Assert.assertEquals(creditCardDepositPage.getTransactionResult(), "Successful Transaction",
+				"Test should return: Successful Transaction, Actual result:"
+						+ creditCardDepositPage.getTransactionResult());
 	}
 }

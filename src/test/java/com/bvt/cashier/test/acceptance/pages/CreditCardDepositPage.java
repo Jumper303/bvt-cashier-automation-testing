@@ -1,5 +1,6 @@
 package com.bvt.cashier.test.acceptance.pages;
 
+import java.util.List;
 import java.util.Map;
 
 import org.openqa.selenium.By;
@@ -8,52 +9,58 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.bvt.cashier.test.acceptance.common.DatePicker;
-
 public class CreditCardDepositPage extends PageBase {
+	
 	@FindBy(id = "bcDropdownMenu")
 	public WebElement bankCardDropdownMenu;
 
-	@FindBy(xpath = "//*/a[contains(text(),'Add new')]")
-	public WebElement addNewCardLink;
+	// There is no unique id or class for this element. Don't want to rely on
+	// link text
+	@FindBy(xpath = "//a[contains(@onclick,'addNewBankcard')]")
+	private WebElement addNewCardLink;
 
 	@FindBy(xpath = "//input[contains(@class,'form-control newcc')]")
-	public WebElement cardNumberField;
+	private WebElement cardNumberField;
 
 	@FindBy(id = "nameOnTheCard")
-	public WebElement nameOnCardField;
+	private WebElement nameOnCardField;
 
 	@FindBy(css = ".input-group-addon.btn")
-	public WebElement datePickerButton;
+	private WebElement datePickerButton;
 
 	@FindBy(xpath = "//*/span[@class='year'][1]")
-	public WebElement nextAvailableYearButton;
+	private WebElement nextAvailableYearButton;
 
 	@FindBy(xpath = "//*/span[@class='month'][1]")
-	public WebElement firstAvailableMonthButton;
+	private WebElement firstAvailableMonthButton;
 
 	@FindBy(id = "csc")
-	public WebElement cscField;
+	private WebElement cscField;
 
 	@FindBy(xpath = "//*/input[@id='amount']")
-	public WebElement amountField;
+	private WebElement amountField;
 
 	@FindBy(id = "submitBtn")
-	public WebElement submitButton;
-
+	private WebElement submitButton;
+	
 	@FindBy(xpath = "//*/div[@class='msg-header success-header']")
-	public WebElement messageHeaderLabel;
+	private WebElement messageHeaderLabel;
 
-	public WebElement waitForElementToBeClickable(WebElement element) {
-		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(element));
-		return element;
-	}
+	@FindBy(xpath = "//*[@id='bcDropdownMenu']")
+	private List<WebElement> bankCardDropdownMenuOptions;
 
-	public WebElement waitForTextToBePresentInElement(WebElement element, String text) {
-		new WebDriverWait(driver, 30).until(ExpectedConditions.textToBePresentInElement(element, text));
-		return element;
+	private WebElement getCardElementByPattern(String pattern) {
+		WebElement result = null;
+
+		for (WebElement element : bankCardDropdownMenuOptions) {
+			if (element.findElement(By.xpath("span")).getText().equals(pattern)) {
+				result = element;
+			}
+		}
+		return result;
 	}
 
 	public CreditCardDepositPage(WebDriver driver) {
@@ -61,38 +68,42 @@ public class CreditCardDepositPage extends PageBase {
 	}
 
 	public void navigateToPage(String siteUrl) {
-		super.navigateToPage(siteUrl+"/cashier/CreditDebitCardBVT/type/deposit");
+		super.navigateToPage(siteUrl + "/cashier/CreditDebitCardBVT/type/deposit");
 		waitForPageLoad();
 	}
 
-	public void switchToIframe() {
-		driver.switchTo().defaultContent();
-		driver.switchTo().frame(driver.findElement(By.cssSelector("iframe.well.embed-responsive-item")));
-		waitForElementToBeClickable(submitButton);
+	public String getTransactionResult() {
+		return messageHeaderLabel.getText();
 	}
 
 	public void populatePageWithData(Map<String, String> paymentData) {
-		switchToIframe();
+		switchToIframe("iframe.well.embed-responsive-item");
 		waitForElementToBeClickable(bankCardDropdownMenu).click();
-		waitForElementToBeClickable(addNewCardLink).click();
-		waitForElementToBeClickable(cardNumberField).clear();
 
-		for (char digit : (paymentData.get("cardNumber")).toCharArray()) {
-			waitForElementToBeClickable(cardNumberField).sendKeys("" + digit);
+		if (Boolean.parseBoolean(paymentData.get("useExistingCard"))) {
+			waitForElementToBeClickable(getCardElementByPattern(paymentData.get("cardNumber"))).click();
+		} else {
+			waitForElementToBeClickable(addNewCardLink).click();
+			waitForElementToBeClickable(cardNumberField).clear();
+
+			for (char digit : (paymentData.get("cardNumber")).toCharArray()) {
+				waitForElementToBeClickable(cardNumberField).sendKeys("" + digit);
+			}
+
+			waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
+			waitForElementToBeClickable(nameOnCardField).clear();
+			waitForElementToBeClickable(nameOnCardField).sendKeys(paymentData.get("nameOnCard"));
+			waitForElementToBeClickable(nameOnCardField).sendKeys(Keys.TAB);
+
+			// DatePicker datePicker = new DatePicker(driver);
+			// datePicker.setDate(Integer.parseInt(paymentData.get("expiryYear")),
+			// Integer.parseInt(paymentData.get("expiryMonth")));
+
+			waitForElementToBeClickable(datePickerButton).click();
+			waitForElementToBeClickable(nextAvailableYearButton).click();
+			waitForElementToBeClickable(firstAvailableMonthButton).click();
 		}
 
-		waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
-		waitForElementToBeClickable(nameOnCardField).clear();
-		waitForElementToBeClickable(nameOnCardField).sendKeys(paymentData.get("nameOnCard"));
-		waitForElementToBeClickable(nameOnCardField).sendKeys(Keys.TAB);
-		
-		//DatePicker datePicker = new DatePicker(driver);
-		//datePicker.setDate(Integer.parseInt(paymentData.get("expiryYear")), Integer.parseInt(paymentData.get("expiryMonth")));
-		
-		waitForElementToBeClickable(datePickerButton).click();
-		waitForElementToBeClickable(nextAvailableYearButton).click();
-		waitForElementToBeClickable(firstAvailableMonthButton).click();
-		
 		waitForElementToBeClickable(cscField).clear();
 		waitForElementToBeClickable(cscField).sendKeys(paymentData.get("csc"));
 		waitForElementToBeClickable(cscField).sendKeys(Keys.TAB);
@@ -100,9 +111,15 @@ public class CreditCardDepositPage extends PageBase {
 		waitForElementToBeClickable(amountField).sendKeys(paymentData.get("amount"));
 	}
 
-	public void submit(String expectedTransactionResult) {
+	
+	
+	public void waitFortransationToBeCompleted() {
+		new WebDriverWait(driver, 30)
+				.until(ExpectedConditions.textToBePresentInElement(messageHeaderLabel, "Successful Transaction"));
+	}
+
+	public void submit() {
 		waitForElementToBeClickable(submitButton).click();
-		waitForTextToBePresentInElement(messageHeaderLabel, expectedTransactionResult);
 	}
 
 }
