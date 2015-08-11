@@ -1,4 +1,4 @@
-package com.bvt.cashier.test.acceptance.deposit;
+package com.bvt.cashier.test.acceptance.tests;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,10 +44,11 @@ public class DepositTest extends TestFixture {
 		creditCardDepositPage.populatePageWithData(paymentData);
 		creditCardDepositPage.submit();
 		creditCardDepositPage.waitFortransationToBeCompleted();
-	
-		Assert.assertEquals(creditCardDepositPage.getTransactionResult(), "Successful Transaction",
+		
+		String actualResult = creditCardDepositPage.getTransactionResult();
+		Assert.assertEquals(actualResult, "Successful Transaction",
 				"Test should return: Successful Transaction, Actual result:"
-						+ creditCardDepositPage.getTransactionResult());
+						+ actualResult);
 	}
 	
 	@Test(enabled = true, testName = "Test:shouldReturnSuccessfulTransactionOnDepositWith3DSPayment")
@@ -78,10 +79,10 @@ public class DepositTest extends TestFixture {
 		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);		
 		secureAuthenticationPage.authenticateWith(paymentData.get("authenticationStatus"));
 		
-		
-		Assert.assertEquals(creditCardDepositPage.getTransactionResult(), "Successful Transaction",
+		String actualResult = creditCardDepositPage.getTransactionResult();
+		Assert.assertEquals(actualResult, "Successful Transaction",
 				"Test should return: Successful Transaction, Actual result:"
-						+ creditCardDepositPage.getTransactionResult());
+						+ actualResult);
 	}
 	
 	@Test(enabled = true, testName = "Test:shouldReturnFailedTransactionOnDepositWith3DSPayment")
@@ -115,9 +116,9 @@ public class DepositTest extends TestFixture {
 		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);		
 		secureAuthenticationPage.authenticateWith(paymentData.get("authenticationStatus"));
 		
-		
-		Assert.assertEquals(creditCardDepositPage.getTransactionResult(), "Unsuccessful Transaction",
+		String actualResult = creditCardDepositPage.getTransactionResult();
+		Assert.assertEquals(actualResult, "Unsuccessful Transaction",
 				"Test should return: Unsuccessful Transaction, Actual result:"
-						+ creditCardDepositPage.getTransactionResult());
+						+ actualResult);
 	}
 }

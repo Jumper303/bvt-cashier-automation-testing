@@ -4,16 +4,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class CreditCardDepositPage extends PageBase {
-	
+
 	@FindBy(id = "bcDropdownMenu")
 	public WebElement bankCardDropdownMenu;
 
@@ -45,9 +46,12 @@ public class CreditCardDepositPage extends PageBase {
 
 	@FindBy(id = "submitBtn")
 	private WebElement submitButton;
-	
-	@FindBy(css = "div.msg-header")	
+
+	@FindBy(css = "div.msg-header")
 	private WebElement messageHeaderLabel;
+
+	@FindBy(xpath = "//small[@class='help-block' and @data-bv-result='INVALID']")
+	private WebElement helpBlockLabel;
 
 	@FindBy(xpath = "//*[@id='bcDropdownMenu']")
 	private List<WebElement> bankCardDropdownMenuOptions;
@@ -67,6 +71,12 @@ public class CreditCardDepositPage extends PageBase {
 		super(driver);
 	}
 
+	public String getValidationError() {
+		switchToIframe("iframe.well.embed-responsive-item");
+		waitForAjaxCallToComplete();
+		return helpBlockLabel.getText();
+	}
+
 	public void navigateToPage(String siteUrl) {
 		super.navigateToPage(siteUrl + "/cashier/CreditDebitCardBVT/type/deposit");
 		waitForPageLoad();
@@ -74,6 +84,18 @@ public class CreditCardDepositPage extends PageBase {
 
 	public String getTransactionResult() {
 		return messageHeaderLabel.getText();
+	}
+
+	public void fillCardNumber(String cardNumber) {
+		switchToIframe("iframe.well.embed-responsive-item");
+		waitForElementToBeClickable(bankCardDropdownMenu).click();
+		waitForElementToBeClickable(addNewCardLink).click();
+		waitForElementToBeClickable(cardNumberField).clear();
+
+		for (char digit : (cardNumber).toCharArray()) {
+			waitForElementToBeClickable(cardNumberField).sendKeys("" + digit);
+		}
+		waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
 	}
 
 	public void populatePageWithData(Map<String, String> paymentData) {
@@ -111,8 +133,6 @@ public class CreditCardDepositPage extends PageBase {
 		waitForElementToBeClickable(amountField).sendKeys(paymentData.get("amount"));
 	}
 
-	
-	
 	public void waitFortransationToBeCompleted() {
 		new WebDriverWait(driver, 30)
 				.until(ExpectedConditions.textToBePresentInElement(messageHeaderLabel, "Successful Transaction"));

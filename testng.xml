@@ -3,12 +3,20 @@
 	<!-- IMPORTANT NOTE: Always use 32 bit version of selenium ie driver, even on 64 bit OS!!! -->
 	<!-- IMPORTANT NOTE: Windows Update KB3025390 for IE 11 breaks WebDriver!!! -->	
 	<parameter name="siteUrl" value="http://mock.cashier.bvtpay.com" />	
-	<test name="DepositTests with Firefox">
+	<test name="Deposit Tests with Firefox">
 		<parameter name="browser" value="Firefox" />
 		<parameter name="driverLocation" value="" />	
 					
 		<classes>
-			<class name="com.bvt.cashier.test.acceptance.deposit.DepositTest" />
+			<class name="com.bvt.cashier.test.acceptance.tests.DepositTest" />
+		</classes>
+	</test>
+	<test name="Form Validation Tests with Firefox">
+		<parameter name="browser" value="Firefox" />
+		<parameter name="driverLocation" value="" />	
+					
+		<classes>
+			<class name="com.bvt.cashier.test.acceptance.tests.FormValidationTest" />
 		</classes>
 	</test>
 

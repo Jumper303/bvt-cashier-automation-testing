@@ -16,32 +16,39 @@ public class PageBase {
 		this.driver = driver;
 		PageFactory.initElements(driver, this);
 	}
-	
-	public void navigateToPage(String url)
-	{
-		 driver.manage().window().maximize();
-	     driver.get(url);
+
+	public void navigateToPage(String url) {
+		driver.manage().window().maximize();
+		driver.get(url);
 	}
-	
+
 	public void waitForPageLoad() {
-	    ExpectedCondition<Boolean> pageLoadCondition = new
-	        ExpectedCondition<Boolean>() {
-	            public Boolean apply(WebDriver driver) {
-	                return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
-	            }
-	        };
-	    WebDriverWait wait = new WebDriverWait(driver, 30);
-	    wait.until(pageLoadCondition);
+		ExpectedCondition<Boolean> pageLoadCondition = new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
+			}
+		};
+		WebDriverWait wait = new WebDriverWait(driver, 30);
+		wait.until(pageLoadCondition);
 	}
-	
+
 	public WebElement waitForElementToBeClickable(WebElement element) {
 		new WebDriverWait(driver, 30).until(ExpectedConditions.elementToBeClickable(element));
 		return element;
 	}
-	
+
 	public void switchToIframe(String iFrameCss) {
 		driver.switchTo().defaultContent();
-		driver.switchTo().frame(driver.findElement(By.cssSelector(iFrameCss)));	
+		driver.switchTo().frame(driver.findElement(By.cssSelector(iFrameCss)));
+	}
+
+	public void waitForAjaxCallToComplete() {
+		new WebDriverWait(driver, 180).until(new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				JavascriptExecutor js = (JavascriptExecutor) driver;
+				return (Boolean) js.executeScript("return jQuery.active == 0");
+			}
+		});
 	}
 
 }
