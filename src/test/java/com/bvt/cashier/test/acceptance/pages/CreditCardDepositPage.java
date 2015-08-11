@@ -3,6 +3,7 @@ package com.bvt.cashier.test.acceptance.pages;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -10,11 +11,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 import com.bvt.cashier.test.acceptance.common.DatePicker;
 
 public class CreditCardDepositPage extends PageBase {
-
+	final static Logger logger = Logger.getLogger(CreditCardDepositPage.class);
+	
 	@FindBy(id = "bcDropdownMenu")
 	public WebElement bankCardDropdownMenu;
 
@@ -127,6 +130,17 @@ public class CreditCardDepositPage extends PageBase {
 
 	public void submit() {
 		waitForElementToBeClickable(submitButton).click();
+	}
+
+	public void performDeposit(String siteUrl,  Map<String, String> paymentData) {
+		navigateToPage(siteUrl);
+		try {
+			populatePageWithData(paymentData);
+		} catch (Exception e) {
+			logger.error("Exception ocurred in test during page popluation with data:"+paymentData.toString(), e);
+			Assert.fail("Exception ocurred in test during page popluation with data:"+paymentData.toString(), e);
+		}
+		submit();
 	}
 
 }

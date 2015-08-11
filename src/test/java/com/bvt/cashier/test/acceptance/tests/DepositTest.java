@@ -5,9 +5,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.testng.Assert;
-import org.testng.ITestContext;
-import org.testng.Reporter;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -32,22 +29,9 @@ public class DepositTest extends TestFixture {
 				put("useExistingCard", "false");
 			}
 		};
-
-		if (logger.isDebugEnabled()) {
-			logger.info(
-					"Starting test case: shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment with input data: "
-							+ paymentData.toString());
-		}
-
+	
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
-		creditCardDepositPage.navigateToPage(siteUrl);
-		try {
-			creditCardDepositPage.populatePageWithData(paymentData);
-		} catch (Exception e) {
-			logger.error("Exception ocurred in test: shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment", e);
-			Assert.fail("Exception ocurred in test: shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment", e);
-		}
-		creditCardDepositPage.submit();
+		creditCardDepositPage.performDeposit(siteUrl, paymentData);
 		creditCardDepositPage.waitFortransationToBeCompleted();
 
 		String actualResult = creditCardDepositPage.getTransactionResult();
@@ -69,20 +53,8 @@ public class DepositTest extends TestFixture {
 			}
 		};
 
-		if (logger.isDebugEnabled()) {
-			logger.info("Starting test case: shouldReturnSuccessfulTransactionOnDepositWith3DSPayment with input data: "
-					+ paymentData.toString());
-		}
-
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
-		creditCardDepositPage.navigateToPage(siteUrl);
-		try {
-			creditCardDepositPage.populatePageWithData(paymentData);
-		} catch (Exception e) {
-			logger.error("Exception ocurred in test: shouldReturnSuccessfulTransactionOnDepositWith3DSPayment", e);
-			Assert.fail("Exception ocurred in test: shouldReturnSuccessfulTransactionOnDepositWith3DSPayment", e);
-		}
-		creditCardDepositPage.submit();
+		creditCardDepositPage.performDeposit(siteUrl, paymentData);
 
 		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);
 		secureAuthenticationPage.authenticateWith(paymentData.get("authenticationStatus"));
@@ -108,22 +80,10 @@ public class DepositTest extends TestFixture {
 				put("authenticationStatus", "N");
 			}
 		};
-
-		if (logger.isDebugEnabled()) {
-			logger.info("Starting test case: shouldReturnFailedTransactionOnDepositWith3DSPayment with input data: "
-					+ paymentData.toString());
-		}
-
+	
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
-		creditCardDepositPage.navigateToPage(siteUrl);
-		try {
-			creditCardDepositPage.populatePageWithData(paymentData);
-		} catch (Exception e) {
-			logger.error("Exception ocurred in test: shouldReturnFailedTransactionOnDepositWith3DSPayment", e);
-			Assert.fail("Exception ocurred in test: shouldReturnFailedTransactionOnDepositWith3DSPayment", e);
-		}
-		creditCardDepositPage.submit();
-
+		creditCardDepositPage.performDeposit(siteUrl, paymentData);
+		
 		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);
 		secureAuthenticationPage.authenticateWith(paymentData.get("authenticationStatus"));
 
