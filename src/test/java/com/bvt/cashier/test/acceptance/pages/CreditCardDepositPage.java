@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.bvt.cashier.test.acceptance.common.DatePicker;
 
 public class CreditCardDepositPage extends PageBase {
 
@@ -28,15 +28,6 @@ public class CreditCardDepositPage extends PageBase {
 
 	@FindBy(id = "nameOnTheCard")
 	private WebElement nameOnCardField;
-
-	@FindBy(css = ".input-group-addon.btn")
-	private WebElement datePickerButton;
-
-	@FindBy(xpath = "//*/span[@class='year'][1]")
-	private WebElement nextAvailableYearButton;
-
-	@FindBy(xpath = "//*/span[@class='month'][1]")
-	private WebElement firstAvailableMonthButton;
 
 	@FindBy(id = "csc")
 	private WebElement cscField;
@@ -98,7 +89,7 @@ public class CreditCardDepositPage extends PageBase {
 		waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
 	}
 
-	public void populatePageWithData(Map<String, String> paymentData) {
+	public void populatePageWithData(Map<String, String> paymentData) throws NumberFormatException, Exception {
 		switchToIframe("iframe.well.embed-responsive-item");
 		waitForElementToBeClickable(bankCardDropdownMenu).click();
 
@@ -117,13 +108,9 @@ public class CreditCardDepositPage extends PageBase {
 			waitForElementToBeClickable(nameOnCardField).sendKeys(paymentData.get("nameOnCard"));
 			waitForElementToBeClickable(nameOnCardField).sendKeys(Keys.TAB);
 
-			// DatePicker datePicker = new DatePicker(driver);
-			// datePicker.setDate(Integer.parseInt(paymentData.get("expiryYear")),
-			// Integer.parseInt(paymentData.get("expiryMonth")));
-
-			waitForElementToBeClickable(datePickerButton).click();
-			waitForElementToBeClickable(nextAvailableYearButton).click();
-			waitForElementToBeClickable(firstAvailableMonthButton).click();
+			DatePicker datePicker = new DatePicker(driver);
+			datePicker.setDate(Integer.parseInt(paymentData.get("expiryYear")),
+					Integer.parseInt(paymentData.get("expiryMonth")));
 		}
 
 		waitForElementToBeClickable(cscField).clear();

@@ -25,7 +25,7 @@ public class DepositTest extends TestFixture {
 			{
 				put("cardNumber", "4111111111111111");
 				put("nameOnCard", "Peter Dobrosi");
-				put("expiryYear", "2016");
+				put("expiryYear", "2021");
 				put("expiryMonth", "01");
 				put("csc", "123");
 				put("amount", "1");
@@ -41,20 +41,24 @@ public class DepositTest extends TestFixture {
 
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
 		creditCardDepositPage.navigateToPage(siteUrl);
-		creditCardDepositPage.populatePageWithData(paymentData);
+		try {
+			creditCardDepositPage.populatePageWithData(paymentData);
+		} catch (Exception e) {
+			logger.error("Exception ocurred in test: shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment", e);
+			Assert.fail("Exception ocurred in test: shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment", e);
+		}
 		creditCardDepositPage.submit();
 		creditCardDepositPage.waitFortransationToBeCompleted();
-		
+
 		String actualResult = creditCardDepositPage.getTransactionResult();
 		Assert.assertEquals(actualResult, "Successful Transaction",
-				"Test should return: Successful Transaction, Actual result:"
-						+ actualResult);
+				"Test should return: Successful Transaction, Actual result:" + actualResult);
 	}
-	
+
 	@Test(enabled = true, testName = "Test:shouldReturnSuccessfulTransactionOnDepositWith3DSPayment")
 	@Parameters({ "siteUrl" })
 	public void shouldReturnSuccessfulTransactionOnDepositWith3DSPayment(String siteUrl) {
-		
+
 		Map<String, String> paymentData = new HashMap<String, String>() {
 			{
 				put("cardNumber", "xxxx-xxxx-xxxx-1111");
@@ -66,29 +70,32 @@ public class DepositTest extends TestFixture {
 		};
 
 		if (logger.isDebugEnabled()) {
-			logger.info(
-					"Starting test case: shouldReturnSuccessfulTransactionOnDepositWith3DSPayment with input data: "
-							+ paymentData.toString());
+			logger.info("Starting test case: shouldReturnSuccessfulTransactionOnDepositWith3DSPayment with input data: "
+					+ paymentData.toString());
 		}
 
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
 		creditCardDepositPage.navigateToPage(siteUrl);
-		creditCardDepositPage.populatePageWithData(paymentData);
+		try {
+			creditCardDepositPage.populatePageWithData(paymentData);
+		} catch (Exception e) {
+			logger.error("Exception ocurred in test: shouldReturnSuccessfulTransactionOnDepositWith3DSPayment", e);
+			Assert.fail("Exception ocurred in test: shouldReturnSuccessfulTransactionOnDepositWith3DSPayment", e);
+		}
 		creditCardDepositPage.submit();
-		
-		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);		
+
+		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);
 		secureAuthenticationPage.authenticateWith(paymentData.get("authenticationStatus"));
-		
+
 		String actualResult = creditCardDepositPage.getTransactionResult();
 		Assert.assertEquals(actualResult, "Successful Transaction",
-				"Test should return: Successful Transaction, Actual result:"
-						+ actualResult);
+				"Test should return: Successful Transaction, Actual result:" + actualResult);
 	}
-	
+
 	@Test(enabled = true, testName = "Test:shouldReturnFailedTransactionOnDepositWith3DSPayment")
 	@Parameters({ "siteUrl" })
 	public void shouldReturnFailedTransactionOnDepositWith3DSPayment(String siteUrl) {
-		
+
 		Map<String, String> paymentData = new HashMap<String, String>() {
 			{
 				put("cardNumber", "5555555555554444 ");
@@ -103,22 +110,25 @@ public class DepositTest extends TestFixture {
 		};
 
 		if (logger.isDebugEnabled()) {
-			logger.info(
-					"Starting test case: shouldReturnFailedTransactionOnDepositWith3DSPayment with input data: "
-							+ paymentData.toString());
+			logger.info("Starting test case: shouldReturnFailedTransactionOnDepositWith3DSPayment with input data: "
+					+ paymentData.toString());
 		}
 
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
 		creditCardDepositPage.navigateToPage(siteUrl);
-		creditCardDepositPage.populatePageWithData(paymentData);
+		try {
+			creditCardDepositPage.populatePageWithData(paymentData);
+		} catch (Exception e) {
+			logger.error("Exception ocurred in test: shouldReturnFailedTransactionOnDepositWith3DSPayment", e);
+			Assert.fail("Exception ocurred in test: shouldReturnFailedTransactionOnDepositWith3DSPayment", e);
+		}
 		creditCardDepositPage.submit();
-		
-		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);		
+
+		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);
 		secureAuthenticationPage.authenticateWith(paymentData.get("authenticationStatus"));
-		
+
 		String actualResult = creditCardDepositPage.getTransactionResult();
 		Assert.assertEquals(actualResult, "Unsuccessful Transaction",
-				"Test should return: Unsuccessful Transaction, Actual result:"
-						+ actualResult);
+				"Test should return: Unsuccessful Transaction, Actual result:" + actualResult);
 	}
 }

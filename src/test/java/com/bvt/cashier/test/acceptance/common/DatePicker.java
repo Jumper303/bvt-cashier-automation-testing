@@ -1,38 +1,63 @@
 package com.bvt.cashier.test.acceptance.common;
 
+import java.util.Date;
+import java.util.List;
+
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.internal.WrapsDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class DatePicker {
-	WebDriver driver = null;
+import com.bvt.cashier.test.acceptance.pages.PageBase;
+
+public class DatePicker extends PageBase {
 	@FindBy(css = ".input-group-addon.btn")
 	public WebElement datePickerButton;
 
-	@FindBy(xpath = "//*/span[@class='year'][1]")
-	public WebElement nextAvailableYearButton;
-
-	@FindBy(xpath = "//*/span[@class='month'][1]")
-	public WebElement firstAvailableMonthButton;
-
+	@FindBy(xpath = "//*/div[@class='datepicker-years']/table/thead/tr/th[@class='next']")
+	public WebElement nextCalendarPage;
+	
 	public DatePicker(WebDriver driver) {
-		PageFactory.initElements(driver, this);
-		this.driver = driver;
-		datePickerButton.click();
+		super(driver);
+		PageFactory.initElements(driver, this);		
 	}
 
 	public void setYear(int year) {
+		switchToIframe("iframe.well.embed-responsive-item");
+		datePickerButton.click();
+		List<WebElement> yearElements = driver.findElements(By.xpath("//span[@class='year' or @class='year active']"));
 
+		boolean found = false;
+		for (WebElement element : yearElements) {
+			if (element.getText().equals("" + year)) {
+				found = true;
+				break;
+			}
+		}
+
+		if (!found) {
+			nextCalendarPage.click();
+			waitForAjaxCallToComplete();
+		}
+
+		WebElement yearElement = driver.findElement(
+				By.xpath("//span[(@class='year' or @class='year active') and contains(text(),'" + year + "')]"));
+		waitForElementToBeClickable(yearElement).click();
 	}
 
 	public void setMonth(int month) {
-
+		String monthId = (month < 10) ? "0" + month : "" + month;
+		WebElement monthElement = driver
+				.findElement(By.xpath("//span[@class='month' and contains(text(),'" + monthId + "')]"));
+		waitForElementToBeClickable(monthElement).click();
 	}
-	
-	public void setDate(int year, int month)
-	{
+
+	public void setDate(int year, int month) throws Exception {
+		if (new Date().after(new Date(year, month, 1))) {
+			throw new Exception("The current date is beyond the expiration date!");
+		}
+
 		setYear(year);
 		setMonth(month);
 	}
