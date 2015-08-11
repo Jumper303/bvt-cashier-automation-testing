@@ -46,7 +46,7 @@ public class CreditCardDepositPage extends PageBase {
 	@FindBy(id = "submitBtn")
 	private WebElement submitButton;
 	
-	@FindBy(xpath = "//*/div[@class='msg-header success-header']")
+	@FindBy(css = "div.msg-header")	
 	private WebElement messageHeaderLabel;
 
 	@FindBy(xpath = "//*[@id='bcDropdownMenu']")

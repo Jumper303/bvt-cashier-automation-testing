@@ -57,9 +57,6 @@ public class DepositTest extends TestFixture {
 		Map<String, String> paymentData = new HashMap<String, String>() {
 			{
 				put("cardNumber", "xxxx-xxxx-xxxx-1111");
-				put("nameOnCard", "Peter Dobrosi");
-				put("expiryYear", "2016");
-				put("expiryMonth", "01");
 				put("csc", "123");
 				put("amount", "7");
 				put("useExistingCard", "true");
@@ -69,7 +66,7 @@ public class DepositTest extends TestFixture {
 
 		if (logger.isDebugEnabled()) {
 			logger.info(
-					"Starting test case: shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment with input data: "
+					"Starting test case: shouldReturnSuccessfulTransactionOnDepositWith3DSPayment with input data: "
 							+ paymentData.toString());
 		}
 
@@ -84,6 +81,43 @@ public class DepositTest extends TestFixture {
 		
 		Assert.assertEquals(creditCardDepositPage.getTransactionResult(), "Successful Transaction",
 				"Test should return: Successful Transaction, Actual result:"
+						+ creditCardDepositPage.getTransactionResult());
+	}
+	
+	@Test(enabled = true, testName = "Test:shouldReturnFailedTransactionOnDepositWith3DSPayment")
+	@Parameters({ "siteUrl" })
+	public void shouldReturnFailedTransactionOnDepositWith3DSPayment(String siteUrl) {
+		
+		Map<String, String> paymentData = new HashMap<String, String>() {
+			{
+				put("cardNumber", "5555555555554444 ");
+				put("nameOnCard", "Peter Dobrosi");
+				put("expiryYear", "2016");
+				put("expiryMonth", "01");
+				put("csc", "123");
+				put("amount", "7");
+				put("useExistingCard", "false");
+				put("authenticationStatus", "N");
+			}
+		};
+
+		if (logger.isDebugEnabled()) {
+			logger.info(
+					"Starting test case: shouldReturnFailedTransactionOnDepositWith3DSPayment with input data: "
+							+ paymentData.toString());
+		}
+
+		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
+		creditCardDepositPage.navigateToPage(siteUrl);
+		creditCardDepositPage.populatePageWithData(paymentData);
+		creditCardDepositPage.submit();
+		
+		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);		
+		secureAuthenticationPage.authenticateWith(paymentData.get("authenticationStatus"));
+		
+		
+		Assert.assertEquals(creditCardDepositPage.getTransactionResult(), "Unsuccessful Transaction",
+				"Test should return: Unsuccessful Transaction, Actual result:"
 						+ creditCardDepositPage.getTransactionResult());
 	}
 }
