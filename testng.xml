@@ -1,27 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite name="AcceptanceSuite" >
-	
-	
+<suite name="AcceptanceSuite" >	
 	<!-- IMPORTANT NOTE: Always use 32 bit version of selenium ie driver, even on 64 bit OS!!! -->
 	<!-- IMPORTANT NOTE: Windows Update KB3025390 for IE 11 breaks WebDriver!!! -->	
-	
-	
-	<test name="DepositTest-Firefox">
+	<parameter name="siteUrl" value="http://mock.cashier.bvtpay.com" />	
+	<test name="DepositTests with Firefox">
 		<parameter name="browser" value="Firefox" />
-	<parameter name="driverLocation" value="" />	
+		<parameter name="driverLocation" value="" />	
 					
 		<classes>
 			<class name="com.bvt.cashier.test.acceptance.deposit.DepositTest" />
 		</classes>
-	</test>	
-	
-	<test name="DepositTest-Chrome">
-		<parameter name="browser" value="Chrome" />
-		<parameter name="driverLocation" value="selenium\chromedriver.exe" />	
-					
-		<classes>
-			<class name="com.bvt.cashier.test.acceptance.deposit.DepositTest" />
-		</classes>
-	</test>	
+	</test>
 
 </suite>
