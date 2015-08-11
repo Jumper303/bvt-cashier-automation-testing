@@ -10,6 +10,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.bvt.cashier.test.acceptance.common.DatePicker;
+
 public class CreditCardDepositPage extends PageBase {
 	@FindBy(id = "bcDropdownMenu")
 	public WebElement bankCardDropdownMenu;
@@ -83,9 +85,14 @@ public class CreditCardDepositPage extends PageBase {
 		waitForElementToBeClickable(nameOnCardField).clear();
 		waitForElementToBeClickable(nameOnCardField).sendKeys(paymentData.get("nameOnCard"));
 		waitForElementToBeClickable(nameOnCardField).sendKeys(Keys.TAB);
+		
+		//DatePicker datePicker = new DatePicker(driver);
+		//datePicker.setDate(Integer.parseInt(paymentData.get("expiryYear")), Integer.parseInt(paymentData.get("expiryMonth")));
+		
 		waitForElementToBeClickable(datePickerButton).click();
 		waitForElementToBeClickable(nextAvailableYearButton).click();
 		waitForElementToBeClickable(firstAvailableMonthButton).click();
+		
 		waitForElementToBeClickable(cscField).clear();
 		waitForElementToBeClickable(cscField).sendKeys(paymentData.get("csc"));
 		waitForElementToBeClickable(cscField).sendKeys(Keys.TAB);

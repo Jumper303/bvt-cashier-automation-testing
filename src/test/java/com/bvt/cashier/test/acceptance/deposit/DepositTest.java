@@ -5,6 +5,9 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.testng.Assert;
+import org.testng.ITestContext;
+import org.testng.Reporter;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -19,7 +22,7 @@ public class DepositTest extends TestFixture {
 	public void shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment(String siteUrl) {
 		Map<String, String> paymentData = new HashMap<String, String>() {
 			{
-				put("cardNumber", " 4111111111111111");
+				put("cardNumber", "4111111111111111");
 				put("nameOnCard", "Peter Dobrosi");
 				put("expiryYear", "2016");
 				put("expiryMonth", "01");
@@ -39,6 +42,9 @@ public class DepositTest extends TestFixture {
 		creditCardDepositPage.navigateToPage(siteUrl);
 		creditCardDepositPage.populatePageWithData(paymentData);
 		creditCardDepositPage.submit("Successful Transaction");
-		Assert.assertEquals(creditCardDepositPage.messageHeaderLabel.getText(), "Successful Transaction");
+
+		Assert.assertEquals(creditCardDepositPage.messageHeaderLabel.getText(), "Successful Transaction",
+				"Test should return: Successful Transaction, Actual result:"
+						+ creditCardDepositPage.messageHeaderLabel.getText());
 	}
 }
