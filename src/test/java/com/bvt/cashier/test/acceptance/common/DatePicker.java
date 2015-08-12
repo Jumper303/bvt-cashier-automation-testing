@@ -53,12 +53,12 @@ public class DatePicker extends PageBase {
 		waitForElementToBeClickable(monthElement).click();
 	}
 
-	public void setDate(int year, int month) throws Exception {
-		if (new Date().after(new Date(year, month, 1))) {
+	public void setDate(String year, String month) throws Exception {
+		if (new Date().after(new Date(Integer.parseInt(year), Integer.parseInt(month), 1))) {
 			throw new Exception("The current date is beyond the expiration date!");
 		}
 
-		setYear(year);
-		setMonth(month);
+		setYear(Integer.parseInt(year));
+		setMonth(Integer.parseInt(month));
 	}
 }

@@ -6,18 +6,54 @@
 	<test name="Deposit Tests with Firefox">
 		<parameter name="browser" value="Firefox" />
 		<parameter name="driverLocation" value="" />	
-					
 		<classes>
-			<class name="com.bvt.cashier.test.acceptance.tests.DepositTest" />
+			<class name="com.bvt.cashier.test.acceptance.tests.DepositTest">
+				<methods>
+        			<include name="shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment">
+        					<parameter name="cardNumber" value="4111111111111111" />	
+        					<parameter name="nameOnCard" value="Peter Dobrosi" />	
+        					<parameter name="expiryYear" value="2021" />	
+        					<parameter name="expiryMonth" value="01" />	
+        					<parameter name="csc" value="123" />	
+        					<parameter name="amount" value="1" />	
+        					<parameter name="useExistingCard" value="false" />	
+        					<parameter name="authenticationStatus" value="" />	        									
+        			</include>   		  		
+     		    	<include name="shouldReturnSuccessfulTransactionOnDepositWith3DSPayment">
+        					<parameter name="cardNumber" value="xxxx-xxxx-xxxx-1111" />	
+        					<parameter name="nameOnCard" value="" />	
+        					<parameter name="expiryYear" value="" />	
+        					<parameter name="expiryMonth" value="" />	
+        					<parameter name="csc" value="123" />	
+        					<parameter name="amount" value="7" />	
+        					<parameter name="useExistingCard" value="true" />	
+        					<parameter name="authenticationStatus" value="Y" />	        									
+        			</include>    		  		
+     		  	    <include name="shouldReturnFailedTransactionOnDepositWith3DSPayment">
+        					<parameter name="cardNumber" value="5555555555554444" />	
+        					<parameter name="nameOnCard" value="Peter Dobrosi" />	
+        					<parameter name="expiryYear" value="2021" />	
+        					<parameter name="expiryMonth" value="01" />	
+        					<parameter name="csc" value="123" />	
+        					<parameter name="amount" value="7" />	
+        					<parameter name="useExistingCard" value="false" />	
+        					<parameter name="authenticationStatus" value="N" />	        									
+        			</include>      		  		
+     			 </methods>		
+			</class>
 		</classes>
 	</test>
 	<test name="Form Validation Tests with Firefox">
 		<parameter name="browser" value="Firefox" />
-		<parameter name="driverLocation" value="" />	
-					
+		<parameter name="driverLocation" value="" />						
 		<classes>
-			<class name="com.bvt.cashier.test.acceptance.tests.FormValidationTest" />
+			<class name="com.bvt.cashier.test.acceptance.tests.FormValidationTest">
+				<methods>
+        			<include name="shouldReturnWarningForInvalidCardNumber">
+        					<parameter name="carNumber" value="1111" />					
+        			</include>      		  		
+     			 </methods>			
+			</class>
 		</classes>
 	</test>
-
 </suite>

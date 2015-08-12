@@ -1,5 +1,6 @@
 package com.bvt.cashier.test.acceptance.pages;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +17,10 @@ import org.testng.Assert;
 import com.bvt.cashier.test.acceptance.common.DatePicker;
 
 public class CreditCardDepositPage extends PageBase {
+	private static final String IFRAME_WELL_EMBED_RESPONSIVE_ITEM = "iframe.well.embed-responsive-item";
+
 	final static Logger logger = Logger.getLogger(CreditCardDepositPage.class);
-	
+
 	@FindBy(id = "bcDropdownMenu")
 	public WebElement bankCardDropdownMenu;
 
@@ -66,8 +69,9 @@ public class CreditCardDepositPage extends PageBase {
 	}
 
 	public String getValidationError() {
-		switchToIframe("iframe.well.embed-responsive-item");
+		switchToIframe(IFRAME_WELL_EMBED_RESPONSIVE_ITEM);
 		waitForAjaxCallToComplete();
+		//new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//small[@class='help-block' and @data-bv-result='INVALID']")));
 		return helpBlockLabel.getText();
 	}
 
@@ -81,46 +85,26 @@ public class CreditCardDepositPage extends PageBase {
 	}
 
 	public void fillCardNumber(String cardNumber) {
-		switchToIframe("iframe.well.embed-responsive-item");
+		switchToIframe(IFRAME_WELL_EMBED_RESPONSIVE_ITEM);
 		waitForElementToBeClickable(bankCardDropdownMenu).click();
 		waitForElementToBeClickable(addNewCardLink).click();
-		waitForElementToBeClickable(cardNumberField).clear();
-
-		for (char digit : (cardNumber).toCharArray()) {
-			waitForElementToBeClickable(cardNumberField).sendKeys("" + digit);
-		}
-		waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
+		fillCardNumberField(cardNumber);
 	}
 
 	public void populatePageWithData(Map<String, String> paymentData) throws NumberFormatException, Exception {
-		switchToIframe("iframe.well.embed-responsive-item");
+		switchToIframe(IFRAME_WELL_EMBED_RESPONSIVE_ITEM);
 		waitForElementToBeClickable(bankCardDropdownMenu).click();
 
 		if (Boolean.parseBoolean(paymentData.get("useExistingCard"))) {
 			waitForElementToBeClickable(getCardElementByPattern(paymentData.get("cardNumber"))).click();
 		} else {
 			waitForElementToBeClickable(addNewCardLink).click();
-			waitForElementToBeClickable(cardNumberField).clear();
-
-			for (char digit : (paymentData.get("cardNumber")).toCharArray()) {
-				waitForElementToBeClickable(cardNumberField).sendKeys("" + digit);
-			}
-
-			waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
-			waitForElementToBeClickable(nameOnCardField).clear();
-			waitForElementToBeClickable(nameOnCardField).sendKeys(paymentData.get("nameOnCard"));
-			waitForElementToBeClickable(nameOnCardField).sendKeys(Keys.TAB);
-
-			DatePicker datePicker = new DatePicker(driver);
-			datePicker.setDate(Integer.parseInt(paymentData.get("expiryYear")),
-					Integer.parseInt(paymentData.get("expiryMonth")));
+			fillCardNumberField(paymentData.get("cardNumber"));
+			fillStandardField(nameOnCardField, paymentData.get("nameOnCard"));
+			new DatePicker(driver).setDate(paymentData.get("expiryYear"), paymentData.get("expiryMonth"));
 		}
-
-		waitForElementToBeClickable(cscField).clear();
-		waitForElementToBeClickable(cscField).sendKeys(paymentData.get("csc"));
-		waitForElementToBeClickable(cscField).sendKeys(Keys.TAB);
-		waitForElementToBeClickable(amountField).clear();
-		waitForElementToBeClickable(amountField).sendKeys(paymentData.get("amount"));
+		fillStandardField(cscField, paymentData.get("csc"));
+		fillStandardField(amountField, paymentData.get("amount"));
 	}
 
 	public void waitFortransationToBeCompleted() {
@@ -132,15 +116,46 @@ public class CreditCardDepositPage extends PageBase {
 		waitForElementToBeClickable(submitButton).click();
 	}
 
-	public void performDeposit(String siteUrl,  Map<String, String> paymentData) {
+	private void fillCardNumberField(String cardNumber) {
+		waitForElementToBeClickable(cardNumberField).clear();
+
+		for (char digit : (cardNumber).toCharArray()) {
+			waitForElementToBeClickable(cardNumberField).sendKeys("" + digit);
+		}
+
+		waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
+	}
+
+	private void fillStandardField(WebElement field, String value) {
+		waitForElementToBeClickable(field).clear();
+		waitForElementToBeClickable(field).sendKeys(value);
+		waitForElementToBeClickable(field).sendKeys(Keys.TAB);
+	}
+
+	public void performDeposit(String siteUrl, Map<String, String> paymentData) {
 		navigateToPage(siteUrl);
 		try {
 			populatePageWithData(paymentData);
 		} catch (Exception e) {
-			logger.error("Exception ocurred in test during page popluation with data:"+paymentData.toString(), e);
-			Assert.fail("Exception ocurred in test during page popluation with data:"+paymentData.toString(), e);
+			logger.error("Exception ocurred in test during page popluation with data:" + paymentData.toString(), e);
+			Assert.fail("Exception ocurred in test during page popluation with data:" + paymentData.toString(), e);
 		}
 		submit();
+	}
+
+	public Map<String, String> constructPaymentDto(String cardNumber, String nameOnCard, String expiryYear,
+			String expiryMonth, String csc, String amount, String useExistingCard, String authenticationStatus) {
+		Map<String, String> paymentData = new HashMap<String, String>();
+		paymentData.put("cardNumber", cardNumber);
+		paymentData.put("nameOnCard", nameOnCard);
+		paymentData.put("expiryYear", expiryYear);
+		paymentData.put("expiryMonth", expiryMonth);
+		paymentData.put("csc", csc);
+		paymentData.put("amount", amount);
+		paymentData.put("useExistingCard", useExistingCard);
+		paymentData.put("authenticationStatus", authenticationStatus);
+
+		return paymentData;
 	}
 
 }

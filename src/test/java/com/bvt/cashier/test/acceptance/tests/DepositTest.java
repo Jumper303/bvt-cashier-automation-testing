@@ -15,23 +15,19 @@ import com.bvt.cashier.test.acceptance.pages.SecureAuthenticationPage;
 public class DepositTest extends TestFixture {
 	final static Logger logger = Logger.getLogger(DepositTest.class);
 
+	/**
+	 * Test data driven from testng.xml	
+	 */
 	@Test(enabled = true, testName = "Test:shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment")
-	@Parameters({ "siteUrl" })
-	public void shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment(String siteUrl) {
-		Map<String, String> paymentData = new HashMap<String, String>() {
-			{
-				put("cardNumber", "4111111111111111");
-				put("nameOnCard", "Peter Dobrosi");
-				put("expiryYear", "2021");
-				put("expiryMonth", "01");
-				put("csc", "123");
-				put("amount", "1");
-				put("useExistingCard", "false");
-			}
-		};
-	
+	@Parameters({ "siteUrl", "cardNumber", "nameOnCard", "expiryYear", "expiryMonth", "csc", "amount",
+			"useExistingCard", "authenticationStatus" })
+	public void shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment(String siteUrl, String cardNumber,
+			String nameOnCard, String expiryYear, String expiryMonth, String csc, String amount, String useExistingCard,
+			String authenticationStatus) {
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
-		creditCardDepositPage.performDeposit(siteUrl, paymentData);
+		Map<String, String> paymentDataDto = creditCardDepositPage.constructPaymentDto(cardNumber, nameOnCard,
+				expiryYear, expiryMonth, csc, amount, useExistingCard, authenticationStatus);
+		creditCardDepositPage.performDeposit(siteUrl, paymentDataDto);
 		creditCardDepositPage.waitFortransationToBeCompleted();
 
 		String actualResult = creditCardDepositPage.getTransactionResult();
@@ -40,24 +36,18 @@ public class DepositTest extends TestFixture {
 	}
 
 	@Test(enabled = true, testName = "Test:shouldReturnSuccessfulTransactionOnDepositWith3DSPayment")
-	@Parameters({ "siteUrl" })
-	public void shouldReturnSuccessfulTransactionOnDepositWith3DSPayment(String siteUrl) {
-
-		Map<String, String> paymentData = new HashMap<String, String>() {
-			{
-				put("cardNumber", "xxxx-xxxx-xxxx-1111");
-				put("csc", "123");
-				put("amount", "7");
-				put("useExistingCard", "true");
-				put("authenticationStatus", "Y");
-			}
-		};
-
+	@Parameters({ "siteUrl", "cardNumber", "nameOnCard", "expiryYear", "expiryMonth", "csc", "amount",
+			"useExistingCard", "authenticationStatus" })
+	public void shouldReturnSuccessfulTransactionOnDepositWith3DSPayment(String siteUrl, String cardNumber,
+			String nameOnCard, String expiryYear, String expiryMonth, String csc, String amount, String useExistingCard,
+			String authenticationStatus) {
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
-		creditCardDepositPage.performDeposit(siteUrl, paymentData);
+		Map<String, String> paymentDataDto = creditCardDepositPage.constructPaymentDto(cardNumber, nameOnCard,
+				expiryYear, expiryMonth, csc, amount, useExistingCard, authenticationStatus);
+		creditCardDepositPage.performDeposit(siteUrl, paymentDataDto);
 
 		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);
-		secureAuthenticationPage.authenticateWith(paymentData.get("authenticationStatus"));
+		secureAuthenticationPage.authenticateWith(authenticationStatus);
 
 		String actualResult = creditCardDepositPage.getTransactionResult();
 		Assert.assertEquals(actualResult, "Successful Transaction",
@@ -65,27 +55,18 @@ public class DepositTest extends TestFixture {
 	}
 
 	@Test(enabled = true, testName = "Test:shouldReturnFailedTransactionOnDepositWith3DSPayment")
-	@Parameters({ "siteUrl" })
-	public void shouldReturnFailedTransactionOnDepositWith3DSPayment(String siteUrl) {
+	@Parameters({ "siteUrl", "cardNumber", "nameOnCard", "expiryYear", "expiryMonth", "csc", "amount",
+			"useExistingCard", "authenticationStatus" })
+	public void shouldReturnFailedTransactionOnDepositWith3DSPayment(String siteUrl, String cardNumber,
+			String nameOnCard, String expiryYear, String expiryMonth, String csc, String amount, String useExistingCard,
+			String authenticationStatus) {
 
-		Map<String, String> paymentData = new HashMap<String, String>() {
-			{
-				put("cardNumber", "5555555555554444 ");
-				put("nameOnCard", "Peter Dobrosi");
-				put("expiryYear", "2016");
-				put("expiryMonth", "01");
-				put("csc", "123");
-				put("amount", "7");
-				put("useExistingCard", "false");
-				put("authenticationStatus", "N");
-			}
-		};
-	
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
-		creditCardDepositPage.performDeposit(siteUrl, paymentData);
-		
+		Map<String, String> paymentDataDto = creditCardDepositPage.constructPaymentDto(cardNumber, nameOnCard,
+				expiryYear, expiryMonth, csc, amount, useExistingCard, authenticationStatus);
+		creditCardDepositPage.performDeposit(siteUrl, paymentDataDto);
 		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);
-		secureAuthenticationPage.authenticateWith(paymentData.get("authenticationStatus"));
+		secureAuthenticationPage.authenticateWith(authenticationStatus);
 
 		String actualResult = creditCardDepositPage.getTransactionResult();
 		Assert.assertEquals(actualResult, "Unsuccessful Transaction",
