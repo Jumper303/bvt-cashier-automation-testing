@@ -43,14 +43,27 @@
 			</class>
 		</classes>
 	</test>
-	<test name="Form Validation Tests with Firefox">
+	<test name="Form Validation Tests1 with Firefox">
 		<parameter name="browser" value="Firefox" />
 		<parameter name="driverLocation" value="" />						
 		<classes>
 			<class name="com.bvt.cashier.test.acceptance.tests.FormValidationTest">
 				<methods>
         			<include name="shouldReturnWarningForInvalidCardNumber">
-        					<parameter name="carNumber" value="1111" />					
+        					<parameter name="cardNumber" value="1111" />					
+        			</include>      		  		
+     			 </methods>			
+			</class>
+		</classes>
+	</test>
+	<test name="Form Validation Tests2 with Firefox">
+		<parameter name="browser" value="Firefox" />
+		<parameter name="driverLocation" value="" />						
+		<classes>
+			<class name="com.bvt.cashier.test.acceptance.tests.FormValidationTest">
+				<methods>
+        			<include name="shouldReturnWarningForInvalidCardNumber">
+        					<parameter name="cardNumber" value="1112" />					
         			</include>      		  		
      			 </methods>			
 			</class>

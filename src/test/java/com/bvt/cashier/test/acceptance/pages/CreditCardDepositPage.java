@@ -71,7 +71,6 @@ public class CreditCardDepositPage extends PageBase {
 	public String getValidationError() {
 		switchToIframe(IFRAME_WELL_EMBED_RESPONSIVE_ITEM);
 		waitForAjaxCallToComplete();
-		//new WebDriverWait(driver, 30).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//small[@class='help-block' and @data-bv-result='INVALID']")));
 		return helpBlockLabel.getText();
 	}
 
@@ -107,7 +106,7 @@ public class CreditCardDepositPage extends PageBase {
 		fillStandardField(amountField, paymentData.get("amount"));
 	}
 
-	public void waitFortransationToBeCompleted() {
+	public void waitForTransationToBeCompleted() {
 		new WebDriverWait(driver, 30)
 				.until(ExpectedConditions.textToBePresentInElement(messageHeaderLabel, "Successful Transaction"));
 	}
@@ -125,6 +124,12 @@ public class CreditCardDepositPage extends PageBase {
 
 		waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
 	}
+	
+	public void invalidateNumberField()
+	{
+		waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
+	}
+	
 
 	private void fillStandardField(WebElement field, String value) {
 		waitForElementToBeClickable(field).clear();

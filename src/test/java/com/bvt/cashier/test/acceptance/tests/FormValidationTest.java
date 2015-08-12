@@ -10,13 +10,12 @@ import com.bvt.cashier.test.acceptance.pages.CreditCardDepositPage;
 public class FormValidationTest extends TestFixture {
 
 	@Test(enabled = true, testName = "Test:shouldReturnWarningForInvalidCardNumber")
-	@Parameters({ "siteUrl", "carNumber" })
-	public void shouldReturnWarningForInvalidCardNumber(String siteUrl, String cardNumber) {
+	@Parameters({ "cardNumber" })
+	public void shouldReturnWarningForInvalidCardNumber(String cardNumber) {
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
-		creditCardDepositPage.navigateToPage(siteUrl);
-		creditCardDepositPage.fillCardNumber(cardNumber);
-		
-
+		creditCardDepositPage.navigateToPage(this.siteUrl);
+		creditCardDepositPage.fillCardNumber(cardNumber);	
+		creditCardDepositPage.invalidateNumberField();
 		String actualResult = creditCardDepositPage.getValidationError();
 
 		Assert.assertEquals(actualResult, "Invalid card number. Please review the number of digits.",
