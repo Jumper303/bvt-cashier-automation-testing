@@ -19,7 +19,8 @@ public class SecureAuthenticationPage extends PageBase {
 	public void authenticateWith(String value) {
 		switchToIframe("iframe.well.embed-responsive-item");
 		new Select(waitForElementToBeClickable(authenticationStatusDropdown)).selectByValue(value);
-		waitForElementToBeClickable(completeSecureCode).click();
+		javascriptClick(completeSecureCode);
+		//waitForElementToBeClickable(completeSecureCode).click();
 	}
 
 }

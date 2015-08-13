@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -26,7 +27,8 @@ public class CreditCardDepositPage extends PageBase {
 
 	// There is no unique id or class for this element. Don't want to rely on
 	// link text
-	@FindBy(xpath = "//a[contains(@onclick,'addNewBankcard')]")
+	//@FindBy(xpath = "//a[contains(@onclick,'addNewBankcard')]")
+	@FindBy(partialLinkText = "Add new")
 	private WebElement addNewCardLink;
 
 	@FindBy(xpath = "//input[contains(@class,'form-control newcc')]")
@@ -85,8 +87,8 @@ public class CreditCardDepositPage extends PageBase {
 
 	public void fillCardNumber(String cardNumber) {
 		switchToIframe(IFRAME_WELL_EMBED_RESPONSIVE_ITEM);
-		waitForElementToBeClickable(bankCardDropdownMenu).click();
-		waitForElementToBeClickable(addNewCardLink).click();
+		waitForElementToBeClickable(bankCardDropdownMenu).click();		
+		javascriptClick(addNewCardLink);
 		fillCardNumberField(cardNumber);
 	}
 
@@ -97,7 +99,7 @@ public class CreditCardDepositPage extends PageBase {
 		if (Boolean.parseBoolean(paymentData.get("useExistingCard"))) {
 			waitForElementToBeClickable(getCardElementByPattern(paymentData.get("cardNumber"))).click();
 		} else {
-			waitForElementToBeClickable(addNewCardLink).click();
+			javascriptClick(addNewCardLink);
 			fillCardNumberField(paymentData.get("cardNumber"));
 			fillStandardField(nameOnCardField, paymentData.get("nameOnCard"));
 			new DatePicker(driver).setDate(paymentData.get("expiryYear"), paymentData.get("expiryMonth"));
@@ -112,7 +114,7 @@ public class CreditCardDepositPage extends PageBase {
 	}
 
 	public void submit() {
-		waitForElementToBeClickable(submitButton).click();
+		javascriptClick(submitButton);
 	}
 
 	private void fillCardNumberField(String cardNumber) {
@@ -162,5 +164,7 @@ public class CreditCardDepositPage extends PageBase {
 
 		return paymentData;
 	}
+	
+	
 
 }

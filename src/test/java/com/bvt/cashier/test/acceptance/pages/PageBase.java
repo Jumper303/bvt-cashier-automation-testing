@@ -50,5 +50,11 @@ public class PageBase {
 			}
 		});
 	}
+	
+	public void javascriptClick(WebElement element)
+	{
+		JavascriptExecutor executor = (JavascriptExecutor)driver;
+		executor.executeScript("arguments[0].click();", element);
+	}
 
 }

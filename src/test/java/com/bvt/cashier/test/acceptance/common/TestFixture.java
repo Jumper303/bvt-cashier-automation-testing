@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -20,20 +22,20 @@ public abstract class TestFixture {
 	protected WebDriver driver = null;
 	protected String siteUrl;
 
-	@Parameters({ "driverLocation", "browser", "siteUrl" })
+	@Parameters({ "chromeDriverLocation","ieDriverLocation", "browser", "siteUrl" })
 	@BeforeClass
-	public void setUp(String driverLocation, String browser, String siteUrl) {
+	public void setUp(String chromeDriverLocation, String ieDriverLocation, String browser, String siteUrl) {
 		this.siteUrl = siteUrl;
 		if (browser.equalsIgnoreCase("firefox")) {
 			driver = new FirefoxDriver();
 		} else if (browser.equalsIgnoreCase("internet explorer")) {
-			driver = new InternetExplorerDriver();
-			if (driverLocation != null && !driverLocation.isEmpty()) {
-				System.setProperty("webdriver.ie.driver", driverLocation);
-			}
+			if (ieDriverLocation != null && !ieDriverLocation.isEmpty()) {
+				System.setProperty("webdriver.ie.driver", ieDriverLocation);
+				driver = new InternetExplorerDriver();			}
+						
 		} else if (browser.equalsIgnoreCase("chrome")) {
-			if (driverLocation != null && !driverLocation.isEmpty()) {
-				System.setProperty("webdriver.chrome.driver", driverLocation);
+			if (chromeDriverLocation != null && !chromeDriverLocation.isEmpty()) {
+				System.setProperty("webdriver.chrome.driver", chromeDriverLocation);
 				driver = new ChromeDriver();
 			}
 		}
@@ -52,5 +54,7 @@ public abstract class TestFixture {
 			
 		}
 	}
+	
+	
 
 }

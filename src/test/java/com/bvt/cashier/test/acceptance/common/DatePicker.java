@@ -6,6 +6,7 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -17,40 +18,57 @@ public class DatePicker extends PageBase {
 
 	@FindBy(xpath = "//*/div[@class='datepicker-years']/table/thead/tr/th[@class='next']")
 	public WebElement nextCalendarPage;
-	
+
+	@FindBy(xpath = "//*/span[@class='year'][1]")
+	public WebElement nextAvailableYearButton;
+
+	@FindBy(xpath = "//*/span[@class='month'][1]")
+	public WebElement firstAvailableMonthButton;
+
 	public DatePicker(WebDriver driver) {
 		super(driver);
-		PageFactory.initElements(driver, this);		
+		PageFactory.initElements(driver, this);
 	}
 
 	public void setYear(int year) {
 		switchToIframe("iframe.well.embed-responsive-item");
 		datePickerButton.click();
-		List<WebElement> yearElements = driver.findElements(By.xpath("//span[@class='year' or @class='year active']"));
+		if (driver instanceof FirefoxDriver) {
+			List<WebElement> yearElements = driver
+					.findElements(By.xpath("//span[@class='year' or @class='year active']"));
 
-		boolean found = false;
-		for (WebElement element : yearElements) {
-			if (element.getText().equals("" + year)) {
-				found = true;
-				break;
+			boolean found = false;
+			for (WebElement element : yearElements) {
+				if (element.getText().equals("" + year)) {
+					found = true;
+					break;
+				}
 			}
-		}
 
-		if (!found) {
-			nextCalendarPage.click();
-			waitForAjaxCallToComplete();
-		}
+			if (!found) {
+				nextCalendarPage.click();
+				waitForAjaxCallToComplete();
+			}
 
-		WebElement yearElement = driver.findElement(
-				By.xpath("//span[(@class='year' or @class='year active') and contains(text(),'" + year + "')]"));
-		waitForElementToBeClickable(yearElement).click();
+			WebElement yearElement = driver.findElement(
+					By.xpath("//span[(@class='year' or @class='year active') and contains(text(),'" + year + "')]"));
+			waitForElementToBeClickable(yearElement).click();
+		} else {
+			waitForElementToBeClickable(nextAvailableYearButton).click();
+		}
 	}
 
 	public void setMonth(int month) {
-		String monthId = (month < 10) ? "0" + month : "" + month;
-		WebElement monthElement = driver
-				.findElement(By.xpath("//span[@class='month' and contains(text(),'" + monthId + "')]"));
-		waitForElementToBeClickable(monthElement).click();
+		if (driver instanceof FirefoxDriver) {
+			String monthId = (month < 10) ? "0" + month : "" + month;
+
+			WebElement monthElement = driver
+					.findElement(By.xpath("//span[@class='month' and contains(text(),'" + monthId + "')]"));
+			waitForElementToBeClickable(monthElement).click();
+		}else {
+			waitForElementToBeClickable(firstAvailableMonthButton).click();
+		}
+
 	}
 
 	public void setDate(String year, String month) throws Exception {
