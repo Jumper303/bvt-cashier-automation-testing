@@ -4,9 +4,11 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.testng.Assert;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import com.bvt.cashier.test.acceptance.common.DtoHelper;
 import com.bvt.cashier.test.acceptance.common.TestFixture;
 import com.bvt.cashier.test.acceptance.pages.CreditCardDepositPage;
 import com.bvt.cashier.test.acceptance.pages.SecureAuthenticationPage;
@@ -20,9 +22,9 @@ public class DepositTest extends TestFixture {
 	@Test(enabled = true, testName = "Test:shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment")
 	@Parameters({ "cardNumber", "nameOnCard", "expiryYear", "expiryMonth", "csc", "amount", "useExistingCard", "authenticationStatus" })
 	public void shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment(String cardNumber, String nameOnCard, String expiryYear, String expiryMonth, String csc, String amount, String useExistingCard,
-			String authenticationStatus) {
+			@Optional String authenticationStatus) {
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
-		Map<String, String> paymentDataDto = creditCardDepositPage.constructPaymentDto(cardNumber, nameOnCard,	expiryYear, expiryMonth, csc, amount, useExistingCard, authenticationStatus);
+		Map<String, String> paymentDataDto = DtoHelper.constructPaymentDto(cardNumber, nameOnCard,	expiryYear, expiryMonth, csc, amount, useExistingCard, authenticationStatus);
 		creditCardDepositPage.performDeposit(this.siteUrl, paymentDataDto);
 		creditCardDepositPage.waitForTransationToBeCompleted();
 
@@ -35,10 +37,10 @@ public class DepositTest extends TestFixture {
 	@Parameters({"cardNumber", "nameOnCard", "expiryYear", "expiryMonth", "csc", "amount",
 			"useExistingCard", "authenticationStatus" })
 	public void shouldReturnSuccessfulTransactionOnDepositWith3DSPayment(String cardNumber,
-			String nameOnCard, String expiryYear, String expiryMonth, String csc, String amount, String useExistingCard,
+			@Optional String nameOnCard, @Optional String expiryYear, @Optional String expiryMonth, String csc, String amount, String useExistingCard,
 			String authenticationStatus) {
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
-		Map<String, String> paymentDataDto = creditCardDepositPage.constructPaymentDto(cardNumber, nameOnCard, expiryYear, expiryMonth, csc, amount, useExistingCard, authenticationStatus);
+		Map<String, String> paymentDataDto = DtoHelper.constructPaymentDto(cardNumber, nameOnCard, expiryYear, expiryMonth, csc, amount, useExistingCard, authenticationStatus);
 		creditCardDepositPage.performDeposit(this.siteUrl, paymentDataDto);
 
 		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);
@@ -56,7 +58,7 @@ public class DepositTest extends TestFixture {
 			String nameOnCard, String expiryYear, String expiryMonth, String csc, String amount, String useExistingCard,
 			String authenticationStatus) {
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
-		Map<String, String> paymentDataDto = creditCardDepositPage.constructPaymentDto(cardNumber, nameOnCard,	expiryYear, expiryMonth, csc, amount, useExistingCard, authenticationStatus);
+		Map<String, String> paymentDataDto = DtoHelper.constructPaymentDto(cardNumber, nameOnCard,	expiryYear, expiryMonth, csc, amount, useExistingCard, authenticationStatus);
 		creditCardDepositPage.performDeposit(this.siteUrl, paymentDataDto);
 		
 		SecureAuthenticationPage secureAuthenticationPage = new SecureAuthenticationPage(driver);

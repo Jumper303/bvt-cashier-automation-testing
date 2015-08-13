@@ -5,7 +5,9 @@
 	<parameter name="siteUrl" value="http://mock.cashier.bvtpay.com" />	
 	<parameter name="chromeDriverLocation" value="selenium/chromedriver.exe" />
 	<parameter name="ieDriverLocation" value="selenium/IEDriverServer.exe" />
-	<parameter name="browser" value="Firefox" />
+
+	<parameter name="seleniumGridHubUrl" value="" />
+	
 	<test name="Deposit Tests">			
 		<classes>
 			<class name="com.bvt.cashier.test.acceptance.tests.DepositTest">
@@ -17,14 +19,10 @@
         					<parameter name="expiryMonth" value="01" />	
         					<parameter name="csc" value="123" />	
         					<parameter name="amount" value="1" />	
-        					<parameter name="useExistingCard" value="false" />	
-        					<parameter name="authenticationStatus" value="" />	        									
+        					<parameter name="useExistingCard" value="false" />        					     									
         			</include>   		  		
      		    	<include name="shouldReturnSuccessfulTransactionOnDepositWith3DSPayment">
         					<parameter name="cardNumber" value="xxxx-xxxx-xxxx-1111" />	
-        					<parameter name="nameOnCard" value="" />	
-        					<parameter name="expiryYear" value="" />	
-        					<parameter name="expiryMonth" value="" />	
         					<parameter name="csc" value="123" />	
         					<parameter name="amount" value="7" />	
         					<parameter name="useExistingCard" value="true" />	

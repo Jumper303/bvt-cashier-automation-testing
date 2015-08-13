@@ -13,6 +13,11 @@ import org.openqa.selenium.support.PageFactory;
 import com.bvt.cashier.test.acceptance.pages.PageBase;
 
 public class DatePicker extends PageBase {
+	private static final String IFRAME_WELL_EMBED_RESPONSIVE_ITEM = "iframe.well.embed-responsive-item";
+	private static final String ACTIVE_YEAR_ELEMENT_LIST_LOCATOR = "//span[@class='year' or @class='year active']";
+	private static final String DYNAMIC_YEAR_ELEMENT_LOCATOR = "//span[(@class='year' or @class='year active') and contains(text(),'";
+	private static final String DYNAMIC_MONTH_ELEMENT_LOCATOR = "//span[@class='month' and contains(text(),'";
+
 	@FindBy(css = ".input-group-addon.btn")
 	public WebElement datePickerButton;
 
@@ -31,11 +36,10 @@ public class DatePicker extends PageBase {
 	}
 
 	public void setYear(int year) {
-		switchToIframe("iframe.well.embed-responsive-item");
+		switchToIframe(IFRAME_WELL_EMBED_RESPONSIVE_ITEM);
 		datePickerButton.click();
 		if (driver instanceof FirefoxDriver) {
-			List<WebElement> yearElements = driver
-					.findElements(By.xpath("//span[@class='year' or @class='year active']"));
+			List<WebElement> yearElements = driver.findElements(By.xpath(ACTIVE_YEAR_ELEMENT_LIST_LOCATOR));
 
 			boolean found = false;
 			for (WebElement element : yearElements) {
@@ -49,11 +53,16 @@ public class DatePicker extends PageBase {
 				nextCalendarPage.click();
 				waitForAjaxCallToComplete();
 			}
-
-			WebElement yearElement = driver.findElement(
-					By.xpath("//span[(@class='year' or @class='year active') and contains(text(),'" + year + "')]"));
-			waitForElementToBeClickable(yearElement).click();
+			try {
+				WebElement yearElement = driver.findElement(By.xpath(DYNAMIC_YEAR_ELEMENT_LOCATOR + year + "')]"));
+				waitForElementToBeClickable(yearElement).click();
+			} catch (Exception e) {
+				//Fallback to select next available year if the specific selection would fail
+				waitForElementToBeClickable(nextAvailableYearButton).click();
+			}
+			
 		} else {
+			//Fallback to select next available year if the specific selection would fail
 			waitForElementToBeClickable(nextAvailableYearButton).click();
 		}
 	}
@@ -62,10 +71,10 @@ public class DatePicker extends PageBase {
 		if (driver instanceof FirefoxDriver) {
 			String monthId = (month < 10) ? "0" + month : "" + month;
 
-			WebElement monthElement = driver
-					.findElement(By.xpath("//span[@class='month' and contains(text(),'" + monthId + "')]"));
+			WebElement monthElement = driver.findElement(By.xpath(DYNAMIC_MONTH_ELEMENT_LOCATOR + monthId + "')]"));
 			waitForElementToBeClickable(monthElement).click();
-		}else {
+		} else {
+			//Fallback to select January if the specific selection would fail
 			waitForElementToBeClickable(firstAvailableMonthButton).click();
 		}
 

@@ -27,7 +27,7 @@ public class CreditCardDepositPage extends PageBase {
 
 	// There is no unique id or class for this element. Don't want to rely on
 	// link text
-	//@FindBy(xpath = "//a[contains(@onclick,'addNewBankcard')]")
+	// @FindBy(xpath = "//a[contains(@onclick,'addNewBankcard')]")
 	@FindBy(partialLinkText = "Add new")
 	private WebElement addNewCardLink;
 
@@ -87,7 +87,7 @@ public class CreditCardDepositPage extends PageBase {
 
 	public void fillCardNumber(String cardNumber) {
 		switchToIframe(IFRAME_WELL_EMBED_RESPONSIVE_ITEM);
-		waitForElementToBeClickable(bankCardDropdownMenu).click();		
+		waitForElementToBeClickable(bankCardDropdownMenu).click();
 		javascriptClick(addNewCardLink);
 		fillCardNumberField(cardNumber);
 	}
@@ -126,12 +126,10 @@ public class CreditCardDepositPage extends PageBase {
 
 		waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
 	}
-	
-	public void invalidateNumberField()
-	{
+
+	public void invalidateNumberField() {
 		waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
 	}
-	
 
 	private void fillStandardField(WebElement field, String value) {
 		waitForElementToBeClickable(field).clear();
@@ -149,22 +147,5 @@ public class CreditCardDepositPage extends PageBase {
 		}
 		submit();
 	}
-
-	public Map<String, String> constructPaymentDto(String cardNumber, String nameOnCard, String expiryYear,
-			String expiryMonth, String csc, String amount, String useExistingCard, String authenticationStatus) {
-		Map<String, String> paymentData = new HashMap<String, String>();
-		paymentData.put("cardNumber", cardNumber);
-		paymentData.put("nameOnCard", nameOnCard);
-		paymentData.put("expiryYear", expiryYear);
-		paymentData.put("expiryMonth", expiryMonth);
-		paymentData.put("csc", csc);
-		paymentData.put("amount", amount);
-		paymentData.put("useExistingCard", useExistingCard);
-		paymentData.put("authenticationStatus", authenticationStatus);
-
-		return paymentData;
-	}
-	
-	
 
 }
