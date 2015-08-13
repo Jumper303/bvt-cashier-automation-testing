@@ -3,8 +3,10 @@ package com.bvt.cashier.test.acceptance.common;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Simple class to construct a data transfer map for the test data parameters.
+ */
 public class DtoHelper {
-
 	public static Map<String, String> constructPaymentDto(String cardNumber, String nameOnCard, String expiryYear,
 			String expiryMonth, String csc, String amount, String useExistingCard, String authenticationStatus) {
 		Map<String, String> paymentData = new HashMap<String, String>();

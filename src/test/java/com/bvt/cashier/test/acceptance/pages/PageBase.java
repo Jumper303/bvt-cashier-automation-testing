@@ -9,6 +9,10 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+/**
+ * Base class for PageObject to define common methods.
+ *
+ */
 public class PageBase {
 	protected WebDriver driver = null;
 
@@ -51,6 +55,9 @@ public class PageBase {
 		});
 	}
 	
+	/*
+	 * Alternate clicking method, used in certain cases to avoid cross browser issues.
+	 */
 	public void javascriptClick(WebElement element)
 	{
 		JavascriptExecutor executor = (JavascriptExecutor)driver;

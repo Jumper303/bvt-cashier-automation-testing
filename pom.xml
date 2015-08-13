@@ -13,10 +13,10 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.18</version>
 					<configuration>
-						<forkMode>always</forkMode>					
+						<forkMode>always</forkMode>
 						<suiteXmlFiles>
 							<suiteXmlFile>testng.xml</suiteXmlFile>
-						</suiteXmlFiles>						
+						</suiteXmlFiles>
 					</configuration>
 				</plugin>
 			</plugins>

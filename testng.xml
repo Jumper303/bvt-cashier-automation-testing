@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite name="AcceptanceSuite" >	
-	<!-- IMPORTANT NOTE: Always use 32 bit version of selenium ie driver, even on 64 bit OS!!! -->
-	<!-- IMPORTANT NOTE: Windows Update KB3025390 for IE 11 breaks WebDriver!!! -->	
 	<parameter name="siteUrl" value="http://mock.cashier.bvtpay.com" />	
 	<parameter name="chromeDriverLocation" value="selenium/chromedriver.exe" />
 	<parameter name="ieDriverLocation" value="selenium/IEDriverServer.exe" />
-
 	<parameter name="seleniumGridHubUrl" value="" />
 	
 	<test name="Deposit Tests">			

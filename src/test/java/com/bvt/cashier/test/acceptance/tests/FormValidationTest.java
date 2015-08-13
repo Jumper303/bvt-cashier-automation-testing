@@ -7,6 +7,10 @@ import org.testng.annotations.Test;
 import com.bvt.cashier.test.acceptance.common.TestFixture;
 import com.bvt.cashier.test.acceptance.pages.CreditCardDepositPage;
 
+/**
+ * Form validation tests.
+ *
+ */
 public class FormValidationTest extends TestFixture {
 
 	@Test(enabled = true, testName = "Test:shouldReturnWarningForInvalidCardNumber")

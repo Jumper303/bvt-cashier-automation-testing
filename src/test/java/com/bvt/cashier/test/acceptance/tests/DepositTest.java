@@ -13,6 +13,10 @@ import com.bvt.cashier.test.acceptance.common.TestFixture;
 import com.bvt.cashier.test.acceptance.pages.CreditCardDepositPage;
 import com.bvt.cashier.test.acceptance.pages.SecureAuthenticationPage;
 
+/**
+ * Deposit validation tests
+ *
+ */
 public class DepositTest extends TestFixture {
 	final static Logger logger = Logger.getLogger(DepositTest.class);
 
@@ -21,8 +25,10 @@ public class DepositTest extends TestFixture {
 	 */
 	@Test(enabled = true, testName = "Test:shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment")
 	@Parameters({ "cardNumber", "nameOnCard", "expiryYear", "expiryMonth", "csc", "amount", "useExistingCard", "authenticationStatus" })
-	public void shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment(String cardNumber, String nameOnCard, String expiryYear, String expiryMonth, String csc, String amount, String useExistingCard,
-			@Optional String authenticationStatus) {
+	public void shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment(
+			String cardNumber, String nameOnCard, String expiryYear, String expiryMonth, 
+			String csc, String amount, String useExistingCard,	@Optional String authenticationStatus) {
+		
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
 		Map<String, String> paymentDataDto = DtoHelper.constructPaymentDto(cardNumber, nameOnCard,	expiryYear, expiryMonth, csc, amount, useExistingCard, authenticationStatus);
 		creditCardDepositPage.performDeposit(this.siteUrl, paymentDataDto);
@@ -34,12 +40,12 @@ public class DepositTest extends TestFixture {
 	}
 
 	@Test(enabled = true, testName = "Test:shouldReturnSuccessfulTransactionOnDepositWith3DSPayment")
-	@Parameters({"cardNumber", "nameOnCard", "expiryYear", "expiryMonth", "csc", "amount",
-			"useExistingCard", "authenticationStatus" })
-	public void shouldReturnSuccessfulTransactionOnDepositWith3DSPayment(String cardNumber,
-			@Optional String nameOnCard, @Optional String expiryYear, @Optional String expiryMonth, String csc, String amount, String useExistingCard,
-			String authenticationStatus) {
-		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
+	@Parameters({"cardNumber", "nameOnCard", "expiryYear", "expiryMonth", "csc", "amount",	"useExistingCard", "authenticationStatus" })
+	public void shouldReturnSuccessfulTransactionOnDepositWith3DSPayment(
+			String cardNumber,	@Optional String nameOnCard, @Optional String expiryYear, 
+			@Optional String expiryMonth, String csc, String amount, String useExistingCard,String authenticationStatus) {
+		
+		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver); 
 		Map<String, String> paymentDataDto = DtoHelper.constructPaymentDto(cardNumber, nameOnCard, expiryYear, expiryMonth, csc, amount, useExistingCard, authenticationStatus);
 		creditCardDepositPage.performDeposit(this.siteUrl, paymentDataDto);
 
@@ -52,11 +58,11 @@ public class DepositTest extends TestFixture {
 	}
 
 	@Test(enabled = true, testName = "Test:shouldReturnFailedTransactionOnDepositWith3DSPayment")
-	@Parameters({ "cardNumber", "nameOnCard", "expiryYear", "expiryMonth", "csc", "amount",
-			"useExistingCard", "authenticationStatus" })
+	@Parameters({ "cardNumber", "nameOnCard", "expiryYear", "expiryMonth", "csc", "amount",	"useExistingCard", "authenticationStatus" })
 	public void shouldReturnFailedTransactionOnDepositWith3DSPayment(String cardNumber,
-			String nameOnCard, String expiryYear, String expiryMonth, String csc, String amount, String useExistingCard,
-			String authenticationStatus) {
+			String nameOnCard, String expiryYear, String expiryMonth, String csc, 
+			String amount, String useExistingCard, String authenticationStatus) {
+		
 		CreditCardDepositPage creditCardDepositPage = new CreditCardDepositPage(driver);
 		Map<String, String> paymentDataDto = DtoHelper.constructPaymentDto(cardNumber, nameOnCard,	expiryYear, expiryMonth, csc, amount, useExistingCard, authenticationStatus);
 		creditCardDepositPage.performDeposit(this.siteUrl, paymentDataDto);

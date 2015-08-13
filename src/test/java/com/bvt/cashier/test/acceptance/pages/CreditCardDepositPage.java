@@ -1,12 +1,10 @@
 package com.bvt.cashier.test.acceptance.pages;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -17,17 +15,18 @@ import org.testng.Assert;
 
 import com.bvt.cashier.test.acceptance.common.DatePicker;
 
+/**
+ * Page Object to provide interaction with the CreditCardDeposit Page
+ *
+ */
 public class CreditCardDepositPage extends PageBase {
-	private static final String IFRAME_WELL_EMBED_RESPONSIVE_ITEM = "iframe.well.embed-responsive-item";
-
-	final static Logger logger = Logger.getLogger(CreditCardDepositPage.class);
+	private final static  String IFRAME_WELL_EMBED_RESPONSIVE_ITEM = "iframe.well.embed-responsive-item";
+	private final static Logger logger = Logger.getLogger(CreditCardDepositPage.class);
+	private final static String PAGE_URL = "/cashier/CreditDebitCardBVT/type/deposit";
 
 	@FindBy(id = "bcDropdownMenu")
 	public WebElement bankCardDropdownMenu;
 
-	// There is no unique id or class for this element. Don't want to rely on
-	// link text
-	// @FindBy(xpath = "//a[contains(@onclick,'addNewBankcard')]")
 	@FindBy(partialLinkText = "Add new")
 	private WebElement addNewCardLink;
 
@@ -55,17 +54,6 @@ public class CreditCardDepositPage extends PageBase {
 	@FindBy(xpath = "//*[@id='bcDropdownMenu']")
 	private List<WebElement> bankCardDropdownMenuOptions;
 
-	private WebElement getCardElementByPattern(String pattern) {
-		WebElement result = null;
-
-		for (WebElement element : bankCardDropdownMenuOptions) {
-			if (element.findElement(By.xpath("span")).getText().equals(pattern)) {
-				result = element;
-			}
-		}
-		return result;
-	}
-
 	public CreditCardDepositPage(WebDriver driver) {
 		super(driver);
 	}
@@ -76,8 +64,9 @@ public class CreditCardDepositPage extends PageBase {
 		return helpBlockLabel.getText();
 	}
 
+	//site base URL is separated to enable switching between environments
 	public void navigateToPage(String siteUrl) {
-		super.navigateToPage(siteUrl + "/cashier/CreditDebitCardBVT/type/deposit");
+		super.navigateToPage(siteUrl + PAGE_URL);
 		waitForPageLoad();
 	}
 
@@ -117,6 +106,10 @@ public class CreditCardDepositPage extends PageBase {
 		javascriptClick(submitButton);
 	}
 
+	public void invalidateNumberField() {
+		waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
+	}
+
 	private void fillCardNumberField(String cardNumber) {
 		waitForElementToBeClickable(cardNumberField).clear();
 
@@ -124,10 +117,6 @@ public class CreditCardDepositPage extends PageBase {
 			waitForElementToBeClickable(cardNumberField).sendKeys("" + digit);
 		}
 
-		waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
-	}
-
-	public void invalidateNumberField() {
 		waitForElementToBeClickable(cardNumberField).sendKeys(Keys.TAB);
 	}
 
@@ -148,4 +137,14 @@ public class CreditCardDepositPage extends PageBase {
 		submit();
 	}
 
+	private WebElement getCardElementByPattern(String pattern) {
+		WebElement result = null;
+
+		for (WebElement element : bankCardDropdownMenuOptions) {
+			if (element.findElement(By.xpath("span")).getText().equals(pattern)) {
+				result = element;
+			}
+		}
+		return result;
+	}
 }
