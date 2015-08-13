@@ -51,7 +51,7 @@ public abstract class TestFixture {
 			// via Selenium Grid
 			if (browser.equalsIgnoreCase("firefox")) {
 				capabilities = DesiredCapabilities.firefox();
-			} else if (browser.equalsIgnoreCase("internet explorer")) {
+			} else if (browser.equalsIgnoreCase("InternetExplorer")) {
 				capabilities = DesiredCapabilities.internetExplorer();
 				capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
 						true);
@@ -75,7 +75,7 @@ public abstract class TestFixture {
 			// on localhost
 			if (browser.equalsIgnoreCase("firefox")) {
 				driver = new FirefoxDriver();
-			} else if (browser.equalsIgnoreCase("internet explorer")) {
+			} else if (browser.equalsIgnoreCase("InternetExplorer")) {
 				if (ieDriverLocation != null && !ieDriverLocation.isEmpty()) {
 					System.setProperty("webdriver.ie.driver", ieDriverLocation);
 					driver = new InternetExplorerDriver();
