@@ -83,12 +83,20 @@ public class CreditCardDepositPage extends PageBase {
 
 	public void populatePageWithData(Map<String, String> paymentData) throws NumberFormatException, Exception {
 		switchToIframe(IFRAME_WELL_EMBED_RESPONSIVE_ITEM);
-		waitForElementToBeClickable(bankCardDropdownMenu).click();
-
+		
 		if (Boolean.parseBoolean(paymentData.get("useExistingCard"))) {
+			//select existing card
+			waitForElementToBeClickable(bankCardDropdownMenu).click();
 			waitForElementToBeClickable(getCardElementByPattern(paymentData.get("cardNumber"))).click();
 		} else {
-			javascriptClick(addNewCardLink);
+			//add new card			
+			if(driver.findElements(By.id("bcDropdownMenu")).size() > 0)
+			{
+				//not the first card to be added, other cards already exist
+				waitForElementToBeClickable(bankCardDropdownMenu).click();
+				javascriptClick(addNewCardLink);	
+			}
+						
 			fillCardNumberField(paymentData.get("cardNumber"));
 			fillStandardField(nameOnCardField, paymentData.get("nameOnCard"));
 			new DatePicker(driver).setDate(paymentData.get("expiryYear"), paymentData.get("expiryMonth"));
