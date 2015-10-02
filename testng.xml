@@ -5,10 +5,14 @@
 	<parameter name="ieDriverLocation" value="selenium/IEDriverServer.exe" />
 	<parameter name="seleniumGridHubUrl" value="" />
 	
+	  <listeners>
+        <listener class-name="com.bvt.cashier.test.acceptance.common.CustomReport" />        
+    </listeners>
+	
 	<test name="Deposit Tests">			
 		<classes>
 			<class name="com.bvt.cashier.test.acceptance.tests.DepositTest">
-				<!--Expected session token configuration: Country=USD, Currency=USD  -->
+<!-- 				Expected session token configuration: Country=USD, Currency=USD  -->
 				<methods>
         			<include name="shouldReturnSuccessfulTransactionOnDepositWithNon3DSPayment">
         					<parameter name="cardNumber" value="4111111111111111" />	

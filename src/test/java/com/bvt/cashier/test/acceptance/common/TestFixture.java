@@ -7,6 +7,7 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -26,12 +27,13 @@ import org.testng.annotations.Parameters;
  * Base class for specific tests.
  * Defines before and after hook.
  */
-public abstract class TestFixture {
+public abstract class TestFixture{
 	private final static String SCREENSHOT_DIRECTORY = "target/surefire-reports/";
 	private final static String SCREENSHOT_FILE_PREFIX = "_failed.jpg";
 	final static Logger logger = Logger.getLogger(TestFixture.class);
 	protected WebDriver driver = null;
-	protected String siteUrl;
+	protected static String siteUrl;
+	protected static String browser;
 
 	/**
 	 * The specific webdriver is instantiated according the given java parameter -Dbrowser
@@ -88,6 +90,8 @@ public abstract class TestFixture {
 				}
 			}
 		}
+		Capabilities cap =  ((RemoteWebDriver)driver).getCapabilities();
+		this.browser = cap.getPlatform().toString() + " " + cap.getBrowserName() + " "+ cap.getVersion();
 	}
 
 	@AfterClass
@@ -96,11 +100,19 @@ public abstract class TestFixture {
 	}
 
 	@AfterMethod
-	public void takeScreenShotOnFailure(ITestResult testResult) throws IOException {
+	public void takeScreenShotOnFailure(ITestResult testResult) throws IOException {		
 		if (testResult.getStatus() == ITestResult.FAILURE) {
 			File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 			FileUtils.copyFile(scrFile, new File(
-					String.format("%1$s%2$s%3$s", SCREENSHOT_DIRECTORY, testResult.getName(), SCREENSHOT_FILE_PREFIX)));
+					String.format("%1$s%2$s%3$s", SCREENSHOT_DIRECTORY, testResult.getInstanceName() +"-"+testResult.getName(), SCREENSHOT_FILE_PREFIX)));
 		}
+	}
+	
+	public static String getBrowser(){
+		return browser;
+	}
+	
+	public static String getTargetEnvironment(){
+		return siteUrl;
 	}
 }
